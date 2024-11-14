@@ -1,8 +1,35 @@
-import { Text, View, Pressable, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity ,Pressable} from 'react-native';
+import { Client, Account, ID, Models } from 'react-native-appwrite';
+import {useRouter} from "expo-router"
+import React, { useState } from 'react';
 
+let client: Client;
+let account: Account;
+const router=useRouter();
+client = new Client();
+client
+  .setEndpoint('https://cloud.appwrite.io/v1')
+  .setProject('6736282800035887406e')   // Your Project ID
+  .setPlatform('shaadi');   // Your package name / bundle identifier
+
+account = new Account(client);
 export default function Index() {
-  const router=useRouter()
+  const [loggedInUser, setLoggedInUser] = useState<Models.User<Models.Preferences> | null>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+
+  async function login(email: string, password: string) {
+    await account.createEmailPasswordSession(email, password);
+    setLoggedInUser(await account.get());
+  }
+
+  async function register(email: string, password: string, name: string) {
+    await account.create(ID.unique(), email, password, name);
+    await login(email, password);
+    setLoggedInUser(await account.get());
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.text}>First React Native App from Mac!</Text>
@@ -25,6 +52,7 @@ export default function Index() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -51,5 +79,6 @@ const styles = StyleSheet.create({
   },
   marginBottom: {
     marginBottom: 16, 
-  },
+  }, 
 });
+

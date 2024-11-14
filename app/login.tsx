@@ -1,19 +1,20 @@
-import React from 'react';
-import { Text, View } from 'react-native';
-
-import TextInput from './components/TextInput';
-import Button from './components/Button';
-
-export default function Login() {
-  return (
-    <View
-      style={{
-        flex: 1,
+import {Text,View} from "react-native"
+import TextInput from './components/TextInput'
+import Button from './components/Button'
+import React , {useState} from 'react'
+import { FIREBASE_AUTH } from "./FirebaseConfig";
+export default function Login(){
+  const [email,setEmail]=useState('');
+  const [password,setPassword]=useState('');
+  const [loaing,setLoading]=useState(false);
+  const auth=FIREBASE_AUTH
+  return(
+    <View style={{
+      flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center'
-      }}
-    >
+    }}>
       <Text style={{ color: '#223e4b', fontSize: 20, marginBottom: 16 }}>
         Login
       </Text>
@@ -43,5 +44,5 @@ export default function Login() {
       </View>
       <Button label='Login' onPress={() => true} />
     </View>
-  );
+  )
 }
